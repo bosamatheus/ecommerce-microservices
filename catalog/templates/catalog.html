@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Catalog</title>
+</head>
+<body>
+
+    <h1>Products</h1>
+
+    <ul>
+        {{range .}}
+            <li>{{.Name}} - R${{.Price}}</li>
+        {{end}}
+    </ul>
+</body>
+</html>

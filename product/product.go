@@ -11,19 +11,28 @@ import (
 )
 
 type Product struct {
-	UUID    string  `json: "uuid"`
-	Product string  `json: "product"`
-	Price   float64 `json: "price, string"`
+	UUID  string  `json: "uuid"`
+	Name  string  `json: "name"`
+	Price float64 `json: "price"`
 }
 
 type Products struct {
-	Products []Product
+	Products []Product `json: "products"`
+}
+
+func main() {
+	router := mux.NewRouter()
+	router.HandleFunc("/products", listProducts)
+	router.HandleFunc("/products/{id}", getProductById)
+
+	http.ListenAndServe(":8082", router)
 }
 
 func loadData() []byte {
 	jsonFile, err := os.Open("products.json")
 	if err != nil {
 		fmt.Println(err.Error())
+		fmt.Printf("An error has occurred while loading json file: %s\n", err)
 	}
 	defer jsonFile.Close()
 
@@ -32,12 +41,12 @@ func loadData() []byte {
 	return data
 }
 
-func ListProducts(w http.ResponseWriter, r *http.Request) {
+func listProducts(w http.ResponseWriter, r *http.Request) {
 	products := loadData()
 	w.Write([]byte(products))
 }
 
-func GetProductById(w http.ResponseWriter, r *http.Request) {
+func getProductById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	data := loadData()
 
@@ -52,14 +61,6 @@ func GetProductById(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
-		fmt.Println(err)
+		fmt.Printf("An error has occurred while unmarshal json object: %s\n", err)
 	}
-}
-
-func main() {
-	r := mux.NewRouter()
-	r.HandleFunc("/products", ListProducts)
-	r.HandleFunc("/products/{id}", GetProductById)
-
-	http.ListenAndServe(":8081", r)
 }

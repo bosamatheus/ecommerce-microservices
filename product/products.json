@@ -2,17 +2,17 @@
     "products": [
         {
             "uuid": "2043be23-2c61-4f15-826d-cbb23733f77a",
-            "product": "Alface",
+            "name": "Alface",
             "price": 0.99
         },
         {
             "uuid": "e90dc205-6c90-47ad-b765-9c1ebdcf1fa7",
-            "product": "Massa de Tomate",
+            "name": "Massa de Tomate",
             "price": 5.22
         },
         {
             "uuid": "e278bc1b-2750-45cc-8c59-43ecdb24197b",
-            "product": "Lata de Ervilhas",
+            "name": "Lata de Ervilhas",
             "price": 4.67
         }
     ]
