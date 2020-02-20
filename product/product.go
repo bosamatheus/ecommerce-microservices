@@ -31,7 +31,6 @@ func main() {
 func loadData() []byte {
 	jsonFile, err := os.Open("products.json")
 	if err != nil {
-		fmt.Println(err.Error())
 		fmt.Printf("An error has occurred while loading json file: %s\n", err)
 	}
 	defer jsonFile.Close()
