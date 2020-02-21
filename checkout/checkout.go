@@ -8,6 +8,7 @@ import (
 	"text/template"
 
 	"github.com/bosamatheus/ecommerce-microservices/checkout/queue"
+
 	"github.com/gorilla/mux"
 )
 

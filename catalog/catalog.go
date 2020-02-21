@@ -20,13 +20,13 @@ type Products struct {
 	Products []Product `json: "products"`
 }
 
-var productsURL string
+var productURL string
 
 // Executes before main
 func init() {
-	// productsURL := os.Getenv("PRODUCT_URL")
-	productsURL = "http://localhost:8082"
-	_ = productsURL
+	// productURL := os.Getenv("PRODUCT_URL")
+	productURL = "http://localhost:8082"
+	_ = productURL
 }
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
 }
 
 func loadProducts() []Product {
-	response, err := http.Get(productsURL + "/products")
+	response, err := http.Get(productURL + "/products")
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error: %s\n", err)
 	}
@@ -59,7 +59,7 @@ func listProducts(w http.ResponseWriter, r *http.Request) {
 
 func showProduct(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	response, err := http.Get(productsURL + "/products/" + vars["id"])
+	response, err := http.Get(productURL + "/products/" + vars["id"])
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error: %s\n", err)
 	}

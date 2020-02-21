@@ -1,0 +1,31 @@
+- Subindo imagens dos microsserviços para o Docker Hub:
+- Product
+docker build -t bosamatheus/ecommerce-microservice-product .
+docker run bosamatheus/ecommerce-microservice-product
+docker push bosamatheus/ecommerce-microservice-product
+
+- Catalog
+docker build -t bosamatheus/ecommerce-microservice-catalog .
+docker run bosamatheus/ecommerce-microservice-catalog
+docker push bosamatheus/ecommerce-microservice-catalog
+
+- Checkout
+docker build -t bosamatheus/ecommerce-microservice-checkout .
+docker run bosamatheus/ecommerce-microservice-checkout
+docker push bosamatheus/ecommerce-microservice-checkout
+
+- Subindo RabbitMQ e Redis:
+docker-compose up -d
+
+- Admin do RabbitMQ:
+http://localhost:15672/
+
+- Variáveis de ambiente:
+export PRODUCT_URL="http://localhost:8082"
+export RABBITMQ_DEFAULT_USER="rabbitmq"
+export RABBITMQ_DEFAULT_PASS="rabbitmq"
+export RABBITMQ_DEFAULT_HOST="localhost"
+export RABBITMQ_DEFAULT_PORT="5672"
+export RABBITMQ_DEFAULT_VHOST="/"
+export RABBITMQ_CONSUMER_QUEUE="checkout_queue"
+export REDIS_HOST="localhost:6379"
