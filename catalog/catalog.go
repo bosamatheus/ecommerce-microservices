@@ -11,9 +11,9 @@ import (
 )
 
 type Product struct {
-	UUID  string  `json: "uuid"`
-	Name  string  `json: "name"`
-	Price float64 `json: "price"`
+	UUID  string  `json:"uuid"`
+	Name  string  `json:"name"`
+	Price float64 `json:"price,string"`
 }
 
 type Products struct {
@@ -30,11 +30,11 @@ func init() {
 }
 
 func main() {
-	router := mux.NewRouter()
-	router.HandleFunc("/", listProducts)
-	router.HandleFunc("/products/{id}", showProduct)
+	r := mux.NewRouter()
+	r.HandleFunc("/", listProducts)
+	r.HandleFunc("/products/{id}", showProduct)
 
-	http.ListenAndServe(":8083", router)
+	http.ListenAndServe(":8083", r)
 }
 
 func loadProducts() []Product {
@@ -63,6 +63,7 @@ func showProduct(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error: %s\n", err)
 	}
+
 	data, _ := ioutil.ReadAll(response.Body)
 
 	var product Product

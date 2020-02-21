@@ -11,9 +11,9 @@ import (
 )
 
 type Product struct {
-	UUID  string  `json: "uuid"`
-	Name  string  `json: "name"`
-	Price float64 `json: "price"`
+	UUID  string  `json:"uuid"`
+	Name  string  `json:"name"`
+	Price float64 `json:"price,string"`
 }
 
 type Products struct {
@@ -21,11 +21,11 @@ type Products struct {
 }
 
 func main() {
-	router := mux.NewRouter()
-	router.HandleFunc("/products", listProducts)
-	router.HandleFunc("/products/{id}", getProductById)
+	r := mux.NewRouter()
+	r.HandleFunc("/products", listProducts)
+	r.HandleFunc("/products/{id}", getProductById)
 
-	http.ListenAndServe(":8082", router)
+	http.ListenAndServe(":8082", r)
 }
 
 func loadData() []byte {
