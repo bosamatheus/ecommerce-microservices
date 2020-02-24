@@ -14,11 +14,27 @@ docker build -t bosamatheus/ecommerce-microservice-checkout .
 docker run bosamatheus/ecommerce-microservice-checkout
 docker push bosamatheus/ecommerce-microservice-checkout
 
+- Order
+docker build -t bosamatheus/ecommerce-microservice-order .
+docker run bosamatheus/ecommerce-microservice-order
+docker push bosamatheus/ecommerce-microservice-order
+
+- Payment
+docker build -t bosamatheus/ecommerce-microservice-payment .
+docker run bosamatheus/ecommerce-microservice-payment
+docker push bosamatheus/ecommerce-microservice-payment
+
 - Subindo RabbitMQ e Redis:
 docker-compose up -d
 
 - Admin do RabbitMQ:
 http://localhost:15672/
+
+- Acessando Redis:
+docker exec -it docker_redis_1 sh
+redis-cli
+KEYS '*'
+GET key
 
 - Variáveis de ambiente:
 export PRODUCT_URL="http://localhost:8082"

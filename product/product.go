@@ -23,7 +23,7 @@ type Products struct {
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/products", listProducts)
-	r.HandleFunc("/products/{id}", getProductById)
+	r.HandleFunc("/products/{id}", getProductByID)
 
 	http.ListenAndServe(":8082", r)
 }
@@ -45,7 +45,7 @@ func listProducts(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(products))
 }
 
-func getProductById(w http.ResponseWriter, r *http.Request) {
+func getProductByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	data := loadData()
 

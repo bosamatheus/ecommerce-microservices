@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 	"github.com/bosamatheus/ecommerce-microservices/order/db"
 	"github.com/bosamatheus/ecommerce-microservices/order/queue"
 	uuid "github.com/nu7hatch/gouuid"
+	amqp "github.com/streadway/amqp"
 )
 
 type Product struct {
@@ -20,7 +22,7 @@ type Product struct {
 
 type Order struct {
 	UUID      string    `json:"uuid"`
-	ProductId string    `json:"product_id"`
+	ProductID string    `json:"product_id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Phone     string    `json:"phone"`
@@ -38,18 +40,41 @@ func init() {
 }
 
 func main() {
+	var param string
+	flag.StringVar(&param, "opt", "", "Usage")
+	flag.Parse()
+
 	in := make(chan []byte)
 
 	conn := queue.Connect()
-	queue.StartConsuming(conn, in)
 
-	// Draining out the channel in
-	for payload := range in {
-		fmt.Println(string(payload))
+	switch param {
+	case "checkout":
+		queue.StartConsuming("checkout_queue", conn, in)
+
+		// Draining out the channel
+		for payload := range in {
+			order := createOrder(payload)
+			notifyOrderCreated(order, conn)
+
+			fmt.Println("Checkout: ", string(payload))
+		}
+	case "payment":
+		queue.StartConsuming("payment_queue", conn, in)
+
+		var order Order
+		// Draining out the channel
+		for payload := range in {
+			json.Unmarshal(payload, &order)
+			saveOrder(order)
+
+			fmt.Println("Payment: ", string(payload))
+		}
 	}
+
 }
 
-func getProductById(id string) Product {
+func getProductByID(id string) Product {
 	response, err := http.Get(productURL + "/product/" + id)
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
@@ -65,7 +90,7 @@ func getProductById(id string) Product {
 	return product
 }
 
-func createOrder(payload []byte) {
+func createOrder(payload []byte) Order {
 	var order Order
 	json.Unmarshal(payload, &order)
 
@@ -73,6 +98,8 @@ func createOrder(payload []byte) {
 	order.UUID = uuid.String()
 	order.Status = "pendent"
 	order.CreatedAt = time.Now()
+	saveOrder(order)
+	return order
 }
 
 func saveOrder(order Order) {
@@ -83,4 +110,9 @@ func saveOrder(order Order) {
 	if err != nil {
 		panic(err.Error())
 	}
+}
+
+func notifyOrderCreated(order Order, ch *amqp.Channel) {
+	json, _ := json.Marshal(order)
+	queue.Notify(json, "order_ex", "", ch)
 }

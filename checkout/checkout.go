@@ -19,7 +19,7 @@ type Product struct {
 }
 
 type Order struct {
-	ProductId string `json:"product_id"`
+	ProductID string `json:"product_id"`
 	Name      string `json:"name"`
 	Email     string `json:"email"`
 	Phone     string `json:"phone"`
@@ -62,7 +62,7 @@ func displayCheckout(w http.ResponseWriter, r *http.Request) {
 
 func finish(w http.ResponseWriter, r *http.Request) {
 	var order Order
-	order.ProductId = r.FormValue("product_id")
+	order.ProductID = r.FormValue("product_id")
 	order.Name = r.FormValue("name")
 	order.Email = r.FormValue("email")
 	order.Phone = r.FormValue("phone")
