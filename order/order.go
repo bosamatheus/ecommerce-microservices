@@ -71,7 +71,6 @@ func main() {
 			fmt.Println("Payment: ", string(payload))
 		}
 	}
-
 }
 
 func getProductByID(id string) Product {
